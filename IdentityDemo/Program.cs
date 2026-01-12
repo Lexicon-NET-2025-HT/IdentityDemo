@@ -1,13 +1,15 @@
 using IdentityDemo.Data;
+using IdentityDemo.Extensions;
 using IdentityDemo.Models;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 
 namespace IdentityDemo
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public static async Task Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
 
@@ -18,6 +20,7 @@ namespace IdentityDemo
             builder.Services.AddDatabaseDeveloperPageExceptionFilter();
 
             builder.Services.AddDefaultIdentity<ApplicationUser>(options => options.SignIn.RequireConfirmedAccount = true)
+                .AddRoles<IdentityRole>()
                 .AddEntityFrameworkStores<ApplicationDbContext>();
             builder.Services.AddControllersWithViews();
 
@@ -27,6 +30,7 @@ namespace IdentityDemo
             if (app.Environment.IsDevelopment())
             {
                 app.UseMigrationsEndPoint();
+                await app.SeedDataAsync();
             }
             else
             {
